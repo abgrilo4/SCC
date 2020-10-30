@@ -1,7 +1,6 @@
 package com.example.demo.entities;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -69,9 +68,5 @@ public class Calendar {
 	public void cancelReservation(String reservationId)
 	{
 		reservationIds.remove(reservationId);
-	}
-	
-	public void setListed(String listed) {
-		this.listed = listed;
 	}
 }
