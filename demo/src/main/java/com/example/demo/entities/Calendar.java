@@ -7,10 +7,7 @@ import org.springframework.data.annotation.Id;
 import com.microsoft.azure.spring.data.cosmosdb.core.mapping.Document;
 
 @Document
-public class Entity {
-
-	private static final String recommendations = "RECOMMENDATIONS";
-	private static final String frontpage = "FRONTPAGE";
+public class Calendar {
 
 	@Id
 	private String id;
