@@ -1,6 +1,7 @@
 package com.example.demo.rest;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,9 +20,10 @@ public class EntityService {
 	
 	public String createEntity(String name, String description, byte[] photo, List<String> calendarIds, String listed)
 	{
+		String entityId = UUID.randomUUID().toString();
 		Entity entity = new Entity();
 		entity.setName(name);
-		entity.setId(String.valueOf(1));
+		entity.setId(entityId);
 		entity.setDescription(description);
 		entity.setPhoto(photo);
 		entity.setCalendarIds(calendarIds);

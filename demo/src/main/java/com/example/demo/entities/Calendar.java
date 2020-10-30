@@ -19,9 +19,6 @@ public class Calendar {
 	private byte[] photo;
 	private Set<Date> dates;
 	private Set<String> reservationIds;	
-	private int numberOfLikes;
-	private Forum forum;
-	private String listed;
 
 	public String getId() {
 		return id;
