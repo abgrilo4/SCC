@@ -62,7 +62,13 @@ public class Entity {
 		calendarIds.add(calendarId);
 	}
 	
+	public void setCalendarIds(List<String> calendarIds) {
+		this.calendarIds = calendarIds;
+	}
 	
+	public void setListed(String listed) {
+		this.listed = listed;
+	}
 	
 	
 	
