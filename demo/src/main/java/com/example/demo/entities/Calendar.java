@@ -1,6 +1,9 @@
 package com.example.demo.entities;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
 
@@ -14,7 +17,8 @@ public class Calendar {
 	private String name;
 	private String description;
 	private byte[] photo;
-	private List<String> calendarIds;
+	private Set<Date> dates;
+	private Set<String> reservationIds;	
 	private int numberOfLikes;
 	private Forum forum;
 	private String listed;
@@ -51,16 +55,23 @@ public class Calendar {
 		this.photo = photo;
 	}
 	
-	public List<String> getCalendarIds() {
-		return calendarIds;
-	}
-
-	public void addCalendarId(String calendarId) {
-		calendarIds.add(calendarId);
+	public void setAvailablePeriod(Date date)
+	{
+		dates.add(date);
 	}
 	
-	public void setCalendarIds(List<String> calendarIds) {
-		this.calendarIds = calendarIds;
+	public String addReservation(Date date)
+	{
+		dates.remove(date);
+		String reservationId = UUID.randomUUID().toString();
+		reservationIds.add(reservationId);
+		
+		return reservationId;
+	}
+	
+	public void cancelReservation(String reservationId)
+	{
+		reservationIds.remove(reservationId);
 	}
 	
 	public void setListed(String listed) {
