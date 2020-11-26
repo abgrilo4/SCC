@@ -55,10 +55,10 @@
 			<version>2.11.3</version>
 		</dependency>
 		<dependency>
-            <groupId>com.microsoft.azure</groupId>
-            <artifactId>spring-data-cosmosdb</artifactId>
-            <version>2.3.0</version>
-        </dependency>
+			<groupId>com.microsoft.azure</groupId>
+			<artifactId>spring-data-cosmosdb</artifactId>
+			<version>2.3.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jackson2-provider</artifactId>
@@ -75,6 +75,11 @@
 					<artifactId>junit-vintage-engine</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>3.3.0</version>
 		</dependency>
 	</dependencies>
 
