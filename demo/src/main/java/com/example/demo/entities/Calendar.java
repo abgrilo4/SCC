@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -13,11 +14,22 @@ public class Calendar {
 
 	@Id
 	private String id;
+	private String entityId;
 	private String name;
 	private String description;
 	private byte[] photo;
 	private Set<Date> dates;
 	private Set<String> reservationIds;	
+	
+	public Calendar(String entityId, String id, String name, String description)
+	{
+		this.id = id;
+		this.entityId = entityId;
+		this.name = name;
+		this.description = description;
+		dates = new HashSet<>();
+		reservationIds = new HashSet<>();
+	}
 
 	public String getId() {
 		return id;
@@ -25,6 +37,14 @@ public class Calendar {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public String getEntityId() {
+		return entityId;
+	}
+
+	public void setEntityId(String id) {
+		this.entityId = id;
 	}
 
 	public String getName() {
@@ -56,10 +76,13 @@ public class Calendar {
 		dates.add(date);
 	}
 	
-	public String addReservation(Date date)
+	public Set<Date> getDates() {
+		return dates;
+	}
+
+	public String addReservation(Date date, String reservationId)
 	{
 		dates.remove(date);
-		String reservationId = UUID.randomUUID().toString();
 		reservationIds.add(reservationId);
 		
 		return reservationId;

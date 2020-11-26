@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.requests.AddMessageRequest;
+import com.example.demo.requests.AddReplyRequest;
+
 import org.springframework.http.MediaType;
 
 
@@ -23,16 +26,15 @@ public class ForumController {
 	}
 	
 	@PutMapping(path = "/{entityId}", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public void addMessage(@PathVariable String entityId, @RequestBody String textMessage)
+	public void addMessage(@PathVariable String id, @RequestBody AddMessageRequest messageRequest)
 	{
-		forumService.addMessage(entityId, textMessage);
+		forumService.addMessage(messageRequest.getUserId(), messageRequest.getTextMessage(),id);
 	}
 	
 	
 	@PutMapping(path = "/{entityId}", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public void addReply(@PathVariable String entityId, @RequestBody String textMessage, String reply)
+	public void addReply(@PathVariable String entityId, @RequestBody AddReplyRequest replyRequest)
 	{
-		forumService.addReply(entityId, textMessage, reply);
+		forumService.addReply(entityId, AddReplyRequest.getTextMessage(), AddReplyRequest.getReply());
 	}
-
 }

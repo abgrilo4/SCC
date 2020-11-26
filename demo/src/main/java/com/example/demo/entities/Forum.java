@@ -13,8 +13,12 @@ public class Forum {
 	@Id
 	private String id;
 	private String entityId;
-	private LinkedList<String> textMessages;
+	private List<String> textMessages;
 	
+	public Forum(String entityId, String name, String description, String id)
+	{
+		textMessages = new LinkedList<>();
+	}
 
 	public String getId() {
 		return id;
@@ -33,10 +37,8 @@ public class Forum {
 		textMessages.add(textMessage);
 	}
 	
-	public void addReply(String textMessage, String reply)
+	public void addReply(String replyId)
 	{
-		int current = textMessages.indexOf(textMessage);
-		if(textMessages.get(current).length() == 1)
-			textMessages.add(current, reply);
+		textMessages.add(replyId);
 	}
 }
