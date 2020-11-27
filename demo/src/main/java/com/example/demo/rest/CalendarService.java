@@ -1,13 +1,16 @@
 package com.example.demo.rest;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 
 import com.example.demo.entities.Calendar;
 import com.example.demo.entities.Entity;
@@ -15,6 +18,11 @@ import com.example.demo.entities.Reservation;
 import com.example.demo.repositories.CalendarRepository;
 import com.example.demo.repositories.EntityRepository;
 import com.example.demo.repositories.ReservationRepository;
+import com.example.demo.utils.ServiceUtils;
+
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 public class CalendarService {
 	
@@ -22,14 +30,18 @@ public class CalendarService {
 	private CalendarRepository calendarRepository;
 	private ReservationRepository reservationRepository;
 	private SimpleDateFormat dateFormat;
+	private Environment environment;
+	private boolean usesCache;
 	
 	@Autowired
-	public CalendarService(EntityRepository entityRepository, CalendarRepository calendarRepository, ReservationRepository reservationRepository)
+	public CalendarService(EntityRepository entityRepository, CalendarRepository calendarRepository, ReservationRepository reservationRepository, Environment environment)
 	{
 		this.entityRepository = entityRepository;
 		this.calendarRepository = calendarRepository;
 		this.reservationRepository = reservationRepository;
 		this.dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ");
+		this.environment = environment;
+		this.usesCache = this.environment.getProperty("azure.jedis.use").equals("true");
 	}
 	
 	public String createCalendar(String entityId, String name, String description)
@@ -44,15 +56,49 @@ public class CalendarService {
 		 return calendar.getId();
 	}
 	
-	public Calendar getCalendar(String calendarId)
+	public Calendar getCalendar(String calendarId) throws ClassNotFoundException, IOException
 	{
-		try {
-			return calendarRepository.findById(calendarId).get();
+		boolean miss = true;
+		Calendar calendar = null;
+		
+		if(usesCache)
+		{
+			JedisPoolConfig config = new JedisPoolConfig();
+			ServiceUtils.getPool(config);
+			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
+			try(Jedis jedisClient = jedis.getResource()) {
+				String cachedResource = jedisClient.hget("calendars", calendarId);
+				if(cachedResource != null)
+				{
+					calendar = ServiceUtils.deserializeCalendar(cachedResource);
+					miss = false;
+				}
+				jedisClient.close();
+			}
 		}
-		catch(Exception e) {
-			//do nothing
+		
+		if(miss || !usesCache)
+		{
+			
+			try {
+				calendar = calendarRepository.findById(calendarId).get();
+			}
+			catch(Exception e) {
+				return null;
+			}
 		}
-		return null;
+		
+		if(usesCache)
+		{
+			JedisPoolConfig config = new JedisPoolConfig();
+			ServiceUtils.getPool(config);
+			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
+			try(Jedis jedisClient = jedis.getResource()) {
+				jedisClient.hset("calendars", calendarId, ServiceUtils.serializeCalendar(calendar));
+				jedisClient.close();
+			}
+		}
+		return calendar;
 	}
 
 	public Set<Date> addSlotReservations(String calendarId, Set<String> slots)
@@ -94,8 +140,5 @@ public class CalendarService {
 			//do nothing
 		}
 		return null;
-		
-		
-		
 	}
 }
