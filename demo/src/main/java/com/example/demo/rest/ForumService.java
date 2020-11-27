@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
-import com.example.demo.entities.Calendar;
 import com.example.demo.entities.Forum;
 import com.example.demo.entities.Message;
 import com.example.demo.repositories.ForumRepository;
