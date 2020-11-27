@@ -100,6 +100,11 @@ public class CalendarService {
 		}
 		return calendar;
 	}
+	
+	public void deleteCalendar(String entityId)
+	{
+		calendarRepository.deleteById(entityId);
+	}
 
 	public Set<Date> addSlotReservations(String calendarId, Set<String> slots)
 	{
