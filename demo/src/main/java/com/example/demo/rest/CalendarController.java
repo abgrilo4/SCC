@@ -50,9 +50,9 @@ public class CalendarController {
 	}
 	
 	@PutMapping(path = "/edit/{calendarId}")
-	public Calendar getCalendar(@RequestBody GetCalendarRequest getCalendarRequest) throws ClassNotFoundException, IOException
+	public Calendar editCalendar(@PathVariable String calendarId, @RequestBody GetCalendarRequest getCalendarRequest) throws ClassNotFoundException, IOException
 	{
-		return calendarService.editCalendar(GetCalendarRequest.getCalendarId(), GetCalendarRequest.getDescription(), GetCalendarRequest.getName());
+		return calendarService.editCalendar(calendarId, GetCalendarRequest.getDescription(), GetCalendarRequest.getName());
 	}
 	
 	@DeleteMapping(path = "/delete/{entityId}")

@@ -28,8 +28,8 @@ public class Calendar implements Serializable{
 		this.entityId = entityId;
 		this.name = name;
 		this.description = description;
-		dates = new HashSet<>();
-		reservationIds = new HashSet<>();
+		dates = new HashSet<Date>();
+		reservationIds = new HashSet<String>();
 	}
 
 	public String getId() {

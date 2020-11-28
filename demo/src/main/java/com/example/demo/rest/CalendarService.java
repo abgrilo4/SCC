@@ -168,7 +168,7 @@ public class CalendarService{
 
 		}
 		catch(Exception e) {
-			//do nothing
+			System.out.println("Calendar not found.");
 		}
 		return null;
 	}
