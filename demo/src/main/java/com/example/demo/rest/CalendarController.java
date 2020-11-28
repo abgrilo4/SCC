@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entities.Calendar;
+import com.example.demo.requests.AddReservationRequest;
+import com.example.demo.requests.AddSlotReservationsRequest;
+import com.example.demo.requests.CreateCalendarRequest;
+import com.example.demo.requests.GetCalendarRequest;
 
 import org.springframework.http.MediaType;
 
@@ -34,9 +38,9 @@ public class CalendarController {
 	}
 	
 	@PostMapping(consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public String createCalendar(@RequestBody String entityId, String name, String description)
+	public String createCalendar(@RequestBody CreateCalendarRequest createCalendarRequest)
 	{
-		return calendarService.createCalendar(entityId, name, description);
+		return calendarService.createCalendar(CreateCalendarRequest.getEntityId(), CreateCalendarRequest.getName(), CreateCalendarRequest.getDescription());
 	}
 	
 	@GetMapping(path = "/get/{calendarId}")
@@ -46,9 +50,9 @@ public class CalendarController {
 	}
 	
 	@PutMapping(path = "/edit/{calendarId}")
-	public Calendar getCalendar(@RequestBody String calendarId, String description, String name) throws ClassNotFoundException, IOException
+	public Calendar getCalendar(@RequestBody GetCalendarRequest getCalendarRequest) throws ClassNotFoundException, IOException
 	{
-		return calendarService.editCalendar(calendarId, description, name);
+		return calendarService.editCalendar(GetCalendarRequest.getCalendarId(), GetCalendarRequest.getDescription(), GetCalendarRequest.getName());
 	}
 	
 	@DeleteMapping(path = "/delete/{entityId}")
@@ -58,14 +62,14 @@ public class CalendarController {
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public Set<Date> addSlotReservations(@PathVariable String calendarId, Set<String> slots)
+	public Set<Date> addSlotReservations(@PathVariable AddSlotReservationsRequest addSlotReservationsRequest)
 	{
-		return calendarService.addSlotReservations(calendarId, slots);
+		return calendarService.addSlotReservations(AddSlotReservationsRequest.getCalendarId(), AddSlotReservationsRequest.getSlots());
 	}
 	
 	@PostMapping(consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public String addReservation(@PathVariable String calendarId, String date, String name) throws ParseException
+	public String addReservation(@PathVariable AddReservationRequest addReservationRequest) throws ParseException
 	{
-		return calendarService.addReservation(calendarId, date, name);
+		return calendarService.addReservation(AddReservationRequest.getCalendarId(), AddReservationRequest.getDate(), AddReservationRequest.getName());
 	}
 }

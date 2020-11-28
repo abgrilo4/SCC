@@ -2,14 +2,16 @@ package com.example.demo.drivers;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
+import com.azure.data.cosmos.ConnectionPolicy;
+import com.azure.data.cosmos.ConsistencyLevel;
 import com.azure.data.cosmos.CosmosKeyCredential;
 import com.microsoft.azure.spring.data.cosmosdb.config.AbstractCosmosConfiguration;
 import com.microsoft.azure.spring.data.cosmosdb.config.CosmosDBConfig;
 import com.microsoft.azure.spring.data.cosmosdb.repository.config.EnableCosmosRepositories;
 
-@Component
+@Configuration
 @EnableCosmosRepositories(basePackages = "com.example.demo.repositories")
 public class CosmosDriver extends AbstractCosmosConfiguration{
 
@@ -29,6 +31,10 @@ public class CosmosDriver extends AbstractCosmosConfiguration{
 	public CosmosDBConfig getConfig()
 	{
 		this.keyCredential = new CosmosKeyCredential(connectionKey);
-		return CosmosDBConfig.builder(URIConnection, keyCredential, connectionDBName).build();
+		return CosmosDBConfig.builder(URIConnection, this.keyCredential, connectionDBName)
+				.consistencyLevel(ConsistencyLevel.SESSION)
+                .connectionPolicy(ConnectionPolicy.defaultPolicy()
+                .usingMultipleWriteLocations(true))
+                .build();
 	}
 }
