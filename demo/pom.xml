@@ -17,6 +17,10 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<functionAppName>scc</functionAppName>
+		<functionAppRegion>westeurope</functionAppRegion>
+		<functionPricingTier>B1</functionPricingTier>
+		<functionResourceGroup>scc-rg-westeurope-4204</functionResourceGroup>
 	</properties>
 
 	<dependencies>

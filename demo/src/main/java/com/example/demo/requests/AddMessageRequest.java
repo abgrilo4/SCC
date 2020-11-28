@@ -3,7 +3,7 @@ package com.example.demo.requests;
 public class AddMessageRequest {
 
 	private static String userId;
-	private static String textMessage;
+	private String textMessage;
 	
 	public AddMessageRequest( String userId, String textMessage)
 	{
@@ -11,7 +11,7 @@ public class AddMessageRequest {
 		 this.textMessage = textMessage;
 	}
 
-	public static String getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
@@ -19,12 +19,12 @@ public class AddMessageRequest {
 		AddMessageRequest.userId = userId;
 	}
 
-	public static String getTextMessage() {
+	public String getTextMessage() {
 		return textMessage;
 	}
 
-	public static void setTextMessage(String textMessage) {
-		AddMessageRequest.textMessage = textMessage;
+	public void setTextMessage(String textMessage) {
+		this.textMessage = textMessage;
 	}
 	
 	
