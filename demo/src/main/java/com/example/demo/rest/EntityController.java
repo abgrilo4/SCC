@@ -3,7 +3,6 @@ package com.example.demo.rest;
 import java.io.IOException;
 import java.util.List;
 
-import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.entities.Calendar;
 import com.example.demo.entities.Entity;
 
 import org.springframework.http.MediaType;
@@ -68,6 +66,4 @@ public class EntityController {
 	{
 		return entityService.getLikes(entityId);
 	}
-	
-
 }

@@ -1,12 +1,10 @@
 package com.example.demo.entities;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
 
 import com.microsoft.azure.spring.data.cosmosdb.core.mapping.Document;
-import java.util.Set;
 @Document
 public class Entity {
 
