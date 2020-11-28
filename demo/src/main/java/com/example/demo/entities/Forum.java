@@ -14,10 +14,32 @@ public class Forum {
 	private String id;
 	private String entityId;
 	private List<String> textMessages;
+	private String description;
+	private String name;
 	
 	public Forum(String entityId, String name, String description, String id)
 	{
 		textMessages = new LinkedList<>();
+		this.description = description;
+		this.name = name;
+		this.entityId = entityId;
+		this.id = id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getId() {

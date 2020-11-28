@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +43,12 @@ public class CalendarController {
 	public Calendar getCalendar(@RequestBody String calendarId) throws ClassNotFoundException, IOException
 	{
 		return calendarService.getCalendar(calendarId);
+	}
+	
+	@PutMapping(path = "/edit/{calendarId}")
+	public Calendar getCalendar(@RequestBody String calendarId, String description, String name) throws ClassNotFoundException, IOException
+	{
+		return calendarService.editCalendar(calendarId, description, name);
 	}
 	
 	@DeleteMapping(path = "/delete/{entityId}")

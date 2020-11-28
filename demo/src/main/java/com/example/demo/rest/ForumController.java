@@ -38,6 +38,12 @@ public class ForumController {
 		return forumService.createForum(entityId, name, description);
 	}
 	
+	@PutMapping(path= "/edit/{entityId}")
+	public Forum editForum(@RequestBody String entityId, String name, String description) throws ClassNotFoundException, IOException
+	{
+		return forumService.editForum(entityId, name, description);
+	}
+	
 	@GetMapping(path = "/get/{entityId}")
 	public Forum getForum(@RequestBody String entityId) throws ClassNotFoundException, IOException
 	{

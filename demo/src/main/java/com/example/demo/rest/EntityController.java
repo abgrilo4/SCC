@@ -52,7 +52,7 @@ public class EntityController {
 	}
 	
 	@PutMapping(path = "/update/{entityId}", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public void updateEntity(@PathVariable String entityId, @RequestBody String name, String description, byte[] photo, List<String> calendarIds, String listed)
+	public void updateEntity(@PathVariable String entityId, @RequestBody String name, String description, byte[] photo, List<String> calendarIds, String listed) throws ClassNotFoundException, IOException
 	{
 		entityService.updateEntity(entityId, name, description, photo, calendarIds, listed);
 	}

@@ -21,7 +21,7 @@ public class EntityService {
 	private final EntityRepository entities;
 	private Environment environment;
 	private boolean usesCache;
-	
+
 	@Autowired
 	public EntityService(EntityRepository entities, Environment environment)
 	{
@@ -29,7 +29,7 @@ public class EntityService {
 		this.environment = environment;
 		this.usesCache = this.environment.getProperty("azure.jedis.use").equals("true");
 	}
-	
+
 	public String createEntity(String name, String description, byte[] photo, List<String> calendarIds, String listed)
 	{
 		String entityId = UUID.randomUUID().toString();
@@ -44,13 +44,13 @@ public class EntityService {
 		entities.save(entity);
 		return entity.getId();
 	}
-	
+
 
 	public Entity getEntity(String id) throws ClassNotFoundException, IOException
 	{
 		boolean miss = true;
 		Entity entity = null;
-		
+
 		if(usesCache)
 		{
 			JedisPoolConfig config = new JedisPoolConfig();
@@ -66,10 +66,10 @@ public class EntityService {
 				jedisClient.close();
 			}
 		}
-		
+
 		if(miss || !usesCache)
 		{
-			
+
 			try {
 				entity = entities.findById(id).get();
 			}
@@ -77,7 +77,7 @@ public class EntityService {
 				return null;
 			}
 		}
-		
+
 		if(usesCache)
 		{
 			JedisPoolConfig config = new JedisPoolConfig();
@@ -90,22 +90,69 @@ public class EntityService {
 		}
 		return entity;
 	}
-	
+
 	public void deleteEntity(String entityId)
 	{
 		entities.deleteById(entityId);
 	}
-	
-	public void updateEntity(String entityId, String name, String description, byte[] photo, List<String> calendarIds, String listed)
+
+	public Entity updateEntity(String entityId, String name, String description, byte[] photo, List<String> calendarIds, String listed)  throws ClassNotFoundException, IOException
 	{
-		 Entity current = entities.findById(entityId).get();
-		 current.setName(name);
-		 current.setDescription(description);
-		 current.setPhoto(photo);
-		 current.setCalendarIds(calendarIds);
-		 current.setListed(listed);
-		 
-		 entities.save(current);
+		boolean miss = true;
+		Entity entity = null;
+
+		if(usesCache)
+		{
+			JedisPoolConfig config = new JedisPoolConfig();
+			ServiceUtils.getPool(config);
+			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
+			try(Jedis jedisClient = jedis.getResource()) {
+				String cachedResource = jedisClient.hget("entities", entityId);
+				if(cachedResource != null)
+				{
+					entity = ServiceUtils.deserializeEntity(cachedResource);
+					entity.setName(name);
+					entity.setDescription(description);
+					entity.setName(name);
+					entity.setCalendarIds(calendarIds);
+					entity.setListed(listed);
+					entity.setPhoto(photo);
+					miss = false;
+				}
+				jedisClient.close();
+			}
+		}
+
+		if(miss || !usesCache)
+		{
+
+			try {
+				entity = entities.findById(entityId).get();
+				entity.setName(name);
+				entity.setDescription(description);
+				entity.setName(name);
+				entity.setCalendarIds(calendarIds);
+				entity.setListed(listed);
+				entity.setPhoto(photo);
+				entities.save(entity);
+			}
+			catch(Exception e) {
+				return null;
+			}
+		}
+
+		if(usesCache)
+		{
+			JedisPoolConfig config = new JedisPoolConfig();
+			ServiceUtils.getPool(config);
+			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
+			try(Jedis jedisClient = jedis.getResource()) {
+				jedisClient.hset("entities", entityId, ServiceUtils.serializeEntity(entity));
+				entities.save(entity);
+				jedisClient.close();
+			}
+		}
+		return entity;
 	}
 
 }

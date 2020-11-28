@@ -86,6 +86,56 @@ public class ForumService {
 		return forum;
 	}
 	
+	public Forum editForum(String entityId, String name, String description) throws ClassNotFoundException, IOException
+	{
+		boolean miss = true;
+		Forum forum = null;
+		
+		if(usesCache)
+		{
+			JedisPoolConfig config = new JedisPoolConfig();
+			ServiceUtils.getPool(config);
+			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
+			try(Jedis jedisClient = jedis.getResource()) {
+				String cachedResource = jedisClient.hget("forum", entityId);
+				if(cachedResource != null)
+				{
+					forum = ServiceUtils.deserializeForum(cachedResource);
+					forum.setDescription(description);
+					forum.setName(name);
+					miss = false;
+				}
+				jedisClient.close();
+			}
+		}
+		
+		if(miss || !usesCache)
+		{
+			
+			try {
+				forum = forums.findById(entityId).get();
+				forum.setDescription(description);
+				forum.setName(name);
+				forums.save(forum);
+			}
+			catch(Exception e) {
+				return null;
+			}
+		}
+		
+		if(usesCache)
+		{
+			JedisPoolConfig config = new JedisPoolConfig();
+			ServiceUtils.getPool(config);
+			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
+			try(Jedis jedisClient = jedis.getResource()) {
+				jedisClient.hset("forums", entityId, ServiceUtils.serializeForum(forum));
+				jedisClient.close();
+			}
+		}
+		return forum;
+	}
+	
 	public String addMessage(String userId, String textMessage, String id)
 	{
 		Forum forum = forums.findById(id).get();

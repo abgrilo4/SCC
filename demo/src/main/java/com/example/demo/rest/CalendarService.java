@@ -3,9 +3,7 @@ package com.example.demo.rest;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -104,6 +102,56 @@ public class CalendarService {
 	public void deleteCalendar(String entityId)
 	{
 		calendarRepository.deleteById(entityId);
+	}
+	
+	public Calendar editCalendar(String calendarId, String description, String name) throws ClassNotFoundException, IOException
+	{
+		boolean miss = true;
+		Calendar calendar = null;
+		
+		if(usesCache)
+		{
+			JedisPoolConfig config = new JedisPoolConfig();
+			ServiceUtils.getPool(config);
+			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
+			try(Jedis jedisClient = jedis.getResource()) {
+				String cachedResource = jedisClient.hget("calendars", calendarId);
+				if(cachedResource != null)
+				{
+					calendar = ServiceUtils.deserializeCalendar(cachedResource);
+					calendar.setDescription(description);
+					miss = false;
+					
+				}
+				jedisClient.close();
+			}
+		}
+		
+		if(miss || !usesCache)
+		{
+			
+			try {
+				calendar = calendarRepository.findById(calendarId).get();
+				calendar.setDescription(description);
+				calendarRepository.save(calendar);
+			}
+			catch(Exception e) {
+				return null;
+			}
+		}
+		
+		if(usesCache)
+		{
+			JedisPoolConfig config = new JedisPoolConfig();
+			ServiceUtils.getPool(config);
+			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
+			try(Jedis jedisClient = jedis.getResource()) {
+				jedisClient.hset("calendars", calendarId, ServiceUtils.serializeCalendar(calendar));
+				calendarRepository.save(calendar);
+				jedisClient.close();
+			}
+		}
+		return calendar;
 	}
 
 	public Set<Date> addSlotReservations(String calendarId, Set<String> slots)
