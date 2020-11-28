@@ -61,8 +61,14 @@ public class EntityController {
 	}
 	
 	@GetMapping(path = "/getLikes/{entityId}")
-	public Entity getLikes(@PathVariable String entityId) throws ClassNotFoundException, IOException
+	public int getLikes(@PathVariable String entityId) throws ClassNotFoundException, IOException
 	{
-		return entityService.getLikes(entityId);
+		int result = entityService.getLikes(entityId);
+		if(result != -1)
+			return result;
+		else 
+			System.out.println("User not found.");
+		return result;
+			
 	}
 }

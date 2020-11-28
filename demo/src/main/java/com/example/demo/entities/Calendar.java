@@ -1,5 +1,6 @@
 package com.example.demo.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +11,7 @@ import org.springframework.data.annotation.Id;
 import com.microsoft.azure.spring.data.cosmosdb.core.mapping.Document;
 
 @Document
-public class Calendar {
+public class Calendar implements Serializable{
 
 	@Id
 	private String id;

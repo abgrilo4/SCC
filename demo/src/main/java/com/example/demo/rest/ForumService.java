@@ -2,7 +2,6 @@ package com.example.demo.rest;
 
 
 import java.io.IOException;
-
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 @Service
-public class ForumService {
+public class ForumService{
 
 	private final ForumRepository forums;
 	private final MessageRepository messages;
@@ -55,13 +54,12 @@ public class ForumService {
 			ServiceUtils.getPool(config);
 			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
 			try(Jedis jedisClient = jedis.getResource()) {
-				String cachedResource = jedisClient.hget("forum", id);
+				String cachedResource = jedisClient.hget("Forum", id);
 				if(cachedResource != null)
 				{
 					forum = ServiceUtils.deserializeForum(cachedResource);
 					miss = false;
 				}
-				jedisClient.close();
 			}
 		}
 		
@@ -83,7 +81,6 @@ public class ForumService {
 			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
 			try(Jedis jedisClient = jedis.getResource()) {
 				jedisClient.hset("forums", id, ServiceUtils.serializeForum(forum));
-				jedisClient.close();
 			}
 		}
 		return forum;
@@ -100,7 +97,7 @@ public class ForumService {
 			ServiceUtils.getPool(config);
 			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
 			try(Jedis jedisClient = jedis.getResource()) {
-				String cachedResource = jedisClient.hget("forum", entityId);
+				String cachedResource = jedisClient.hget("Forum", entityId);
 				if(cachedResource != null)
 				{
 					forum = ServiceUtils.deserializeForum(cachedResource);
@@ -108,7 +105,6 @@ public class ForumService {
 					forum.setName(name);
 					miss = false;
 				}
-				jedisClient.close();
 			}
 		}
 		
@@ -132,8 +128,7 @@ public class ForumService {
 			ServiceUtils.getPool(config);
 			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
 			try(Jedis jedisClient = jedis.getResource()) {
-				jedisClient.hset("forums", entityId, ServiceUtils.serializeForum(forum));
-				jedisClient.close();
+				jedisClient.hset("Forum", entityId, ServiceUtils.serializeForum(forum));
 			}
 		}
 		return forum;

@@ -21,7 +21,7 @@ public class HomeController {
 		this.homeService = homeService;
 	}
 	
-	@GetMapping(path = "/ranking", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@GetMapping(path = "/ranking")
 	public List<String> getRanking(@RequestBody String entityId)
 	{
 		return homeService.getRanking();

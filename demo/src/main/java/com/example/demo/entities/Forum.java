@@ -1,5 +1,6 @@
 package com.example.demo.entities;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import org.springframework.data.annotation.Id;
 import com.microsoft.azure.spring.data.cosmosdb.core.mapping.Document;
 
 @Document
-public class Forum {
+public class Forum implements Serializable{
 
 	@Id
 	private String id;

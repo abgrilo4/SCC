@@ -2,6 +2,7 @@ package com.example.demo.rest;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import com.example.demo.utils.LikesComparator;
 @Service
 public class HomeService {
 
-	private List<Entity> ranking;
+	private List<Entity> ranking = new LinkedList<Entity>();
 
 	public HomeService(EntityRepository entities)
 	{
@@ -24,10 +25,9 @@ public class HomeService {
 		}
 	}
 
-	@SuppressWarnings("null")
 	public List<String> getRanking()
 	{
-		List<String> result = null;
+		List<String> result = new LinkedList<String>();
         Collections.sort(ranking, new LikesComparator());
         for(Entity e: ranking)
         {

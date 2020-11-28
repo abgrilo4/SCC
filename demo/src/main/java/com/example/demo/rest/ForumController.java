@@ -16,7 +16,6 @@ import com.example.demo.requests.AddMessageRequest;
 import com.example.demo.requests.AddReplyRequest;
 import com.example.demo.requests.EditForumRequest;
 
-import org.springframework.http.MediaType;
 
 
 @RestController
@@ -49,13 +48,13 @@ public class ForumController {
 		return forumService.getForum(entityId);
 	}
 	
-	@PutMapping(path = "/{entityId}", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@PutMapping(path = "/addMessage/{entityId}")
 	public void addMessage(@PathVariable String entityId, @RequestBody AddMessageRequest messageRequest)
 	{
 		forumService.addMessage(messageRequest.getUserId(), messageRequest.getTextMessage(),entityId);
 	}
 	
-	@PutMapping(path = "/{entityId}", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@PutMapping(path = "/addReply/{entityId}")
 	public void addReply(@PathVariable String entityId, @RequestBody AddReplyRequest replyRequest)
 	{
 		forumService.addReply(entityId, AddReplyRequest.getTextMessage(), AddReplyRequest.getReply());

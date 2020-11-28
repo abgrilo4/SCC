@@ -1,5 +1,6 @@
 package com.example.demo.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +10,7 @@ import org.springframework.data.annotation.Id;
 import com.microsoft.azure.spring.data.cosmosdb.core.mapping.Document;
 import java.util.Set;
 @Document
-public class Message {
+public class Message implements Serializable{
 
 	@Id
 	private static String userId;

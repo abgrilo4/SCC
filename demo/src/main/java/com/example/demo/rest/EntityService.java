@@ -57,13 +57,12 @@ public class EntityService {
 			ServiceUtils.getPool(config);
 			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
 			try(Jedis jedisClient = jedis.getResource()) {
-				String cachedResource = jedisClient.hget("entities", id);
+				String cachedResource = jedisClient.hget("Entity", id);
 				if(cachedResource != null)
 				{
 					entity = ServiceUtils.deserializeEntity(cachedResource);
 					miss = false;
 				}
-				jedisClient.close();
 			}
 		}
 
@@ -84,8 +83,7 @@ public class EntityService {
 			ServiceUtils.getPool(config);
 			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
 			try(Jedis jedisClient = jedis.getResource()) {
-				jedisClient.hset("entities", id, ServiceUtils.serializeEntity(entity));
-				jedisClient.close();
+				jedisClient.hset("Entity", id, ServiceUtils.serializeEntity(entity));
 			}
 		}
 		return entity;
@@ -107,7 +105,7 @@ public class EntityService {
 			ServiceUtils.getPool(config);
 			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
 			try(Jedis jedisClient = jedis.getResource()) {
-				String cachedResource = jedisClient.hget("entities", entityId);
+				String cachedResource = jedisClient.hget("Entity", entityId);
 				if(cachedResource != null)
 				{
 					entity = ServiceUtils.deserializeEntity(cachedResource);
@@ -119,7 +117,6 @@ public class EntityService {
 					entity.setPhoto(photo);
 					miss = false;
 				}
-				jedisClient.close();
 			}
 		}
 
@@ -147,9 +144,8 @@ public class EntityService {
 			ServiceUtils.getPool(config);
 			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
 			try(Jedis jedisClient = jedis.getResource()) {
-				jedisClient.hset("entities", entityId, ServiceUtils.serializeEntity(entity));
+				jedisClient.hset("Entity", entityId, ServiceUtils.serializeEntity(entity));
 				entities.save(entity);
-				jedisClient.close();
 			}
 		}
 		return entity;
@@ -165,14 +161,13 @@ public class EntityService {
 			ServiceUtils.getPool(config);
 			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
 			try(Jedis jedisClient = jedis.getResource()) {
-				String cachedResource = jedisClient.hget("entities", entityId);
+				String cachedResource = jedisClient.hget("Entity", entityId);
 				if(cachedResource != null)
 				{
 					entity = ServiceUtils.deserializeEntity(cachedResource);
 					entity.like();
 					miss = false;
 				}
-				jedisClient.close();
 			}
 		}
 
@@ -195,16 +190,15 @@ public class EntityService {
 			ServiceUtils.getPool(config);
 			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
 			try(Jedis jedisClient = jedis.getResource()) {
-				jedisClient.hset("entities", entityId, ServiceUtils.serializeEntity(entity));
+				jedisClient.hset("Entity", entityId, ServiceUtils.serializeEntity(entity));
 				entities.save(entity);
-				jedisClient.close();
 			}
 		}
 		return entity;
 	}
 
 	
-	public Entity getLikes(String entityId) throws IOException, ClassNotFoundException
+	public int getLikes(String entityId) throws IOException, ClassNotFoundException
 	{
 		boolean miss = true;
 		Entity entity = null;
@@ -215,13 +209,12 @@ public class EntityService {
 			ServiceUtils.getPool(config);
 			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
 			try(Jedis jedisClient = jedis.getResource()) {
-				String cachedResource = jedisClient.hget("entities", entityId);
+				String cachedResource = jedisClient.hget("Entity", entityId);
 				if(cachedResource != null)
 				{
 					entity = ServiceUtils.deserializeEntity(cachedResource);
 					miss = false;
 				}
-				jedisClient.close();
 			}
 		}
 
@@ -232,7 +225,7 @@ public class EntityService {
 				entity = entities.findById(entityId).get();
 			}
 			catch(Exception e) {
-				return null;
+				return -1;
 			}
 		}
 
@@ -244,10 +237,9 @@ public class EntityService {
 			try(Jedis jedisClient = jedis.getResource()) {
 				jedisClient.hset("entities", entityId, ServiceUtils.serializeEntity(entity));
 				entities.save(entity);
-				jedisClient.close();
 			}
 		}
-		return entity;
+		return entity.getLikes();
 	}
 
 	}
