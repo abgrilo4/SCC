@@ -22,7 +22,7 @@ public class HomeController {
 	}
 	
 	@GetMapping(path = "/ranking")
-	public List<String> getRanking(@RequestBody String entityId)
+	public List<String> getRanking()
 	{
 		return homeService.getRanking();
 	}

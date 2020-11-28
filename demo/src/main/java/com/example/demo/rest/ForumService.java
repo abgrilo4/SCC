@@ -80,7 +80,7 @@ public class ForumService{
 			ServiceUtils.getPool(config);
 			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
 			try(Jedis jedisClient = jedis.getResource()) {
-				jedisClient.hset("forums", id, ServiceUtils.serializeForum(forum));
+				jedisClient.hset("Forum", id, ServiceUtils.serializeForum(forum));
 			}
 		}
 		return forum;
@@ -141,6 +141,7 @@ public class ForumService{
 		Message message = new Message(userId, textMessage, id, messageId);
 		messages.save(message);
 		forum.addMessage(messageId);
+		forums.save(forum);
 		return messageId;
 	}
 	

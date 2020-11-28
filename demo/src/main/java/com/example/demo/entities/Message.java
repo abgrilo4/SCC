@@ -25,7 +25,7 @@ public class Message implements Serializable{
 		this.message = message;
 		this.forumId = forumId;
 		this.messageId = messageId;
-		replies = new LinkedList<>();
+		replies = new LinkedList<String>();
 	}
 	
 	public static void addReply(String messageId)

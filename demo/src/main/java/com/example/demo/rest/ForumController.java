@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.entities.Forum;
 import com.example.demo.requests.AddMessageRequest;
 import com.example.demo.requests.AddReplyRequest;
+import com.example.demo.requests.CreateForumRequest;
 import com.example.demo.requests.EditForumRequest;
 
 
@@ -31,27 +32,27 @@ public class ForumController {
 	}
 	
 	@PostMapping()
-	public String createForum(@RequestBody String entityId, String name, String description)
+	public String createForum(@RequestBody CreateForumRequest createForumRequest)
 	{
-		return forumService.createForum(entityId, name, description);
+		return forumService.createForum(CreateForumRequest.getEntityId(), CreateForumRequest.getName(), CreateForumRequest.getDescription());
 	}
 	
-	@PutMapping(path= "/edit/{entityId}")
-	public Forum editForum(@PathVariable String entityId, @RequestBody EditForumRequest editForumRequest) throws ClassNotFoundException, IOException
+	@PutMapping(path= "/edit/{id}")
+	public Forum editForum(@PathVariable String id, @RequestBody EditForumRequest editForumRequest) throws ClassNotFoundException, IOException
 	{
-		return forumService.editForum(entityId, EditForumRequest.getName(), EditForumRequest.getDescription());
+		return forumService.editForum(id, EditForumRequest.getName(), EditForumRequest.getDescription());
 	}
 	
-	@GetMapping(path = "/get/{entityId}")
-	public Forum getForum(@PathVariable String entityId) throws ClassNotFoundException, IOException
+	@GetMapping(path = "/get/{id}")
+	public Forum getForum(@PathVariable String id) throws ClassNotFoundException, IOException
 	{
-		return forumService.getForum(entityId);
+		return forumService.getForum(id);
 	}
 	
-	@PutMapping(path = "/addMessage/{entityId}")
-	public void addMessage(@PathVariable String entityId, @RequestBody AddMessageRequest messageRequest)
+	@PutMapping(path = "/addMessage/{id}")
+	public void addMessage(@PathVariable String id, @RequestBody AddMessageRequest messageRequest)
 	{
-		forumService.addMessage(messageRequest.getUserId(), messageRequest.getTextMessage(),entityId);
+		forumService.addMessage(messageRequest.getUserId(), messageRequest.getTextMessage(),id);
 	}
 	
 	@PutMapping(path = "/addReply/{entityId}")
