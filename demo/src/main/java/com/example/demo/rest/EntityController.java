@@ -1,7 +1,6 @@
 package com.example.demo.rest;
 
 import java.io.IOException;
-import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entities.Entity;
 import com.example.demo.requests.CreateEntityRequest;
-
-import org.springframework.http.MediaType;
+import com.example.demo.requests.UpdateEntityRequest;
 
 
 @RestController
@@ -32,38 +30,38 @@ public class EntityController {
 		this.entityService = entityService;
 	}
 	
-	@PostMapping(path = "/create", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@PostMapping()
 	public String createEntity(@RequestBody CreateEntityRequest createEntityRequest)
 	{
 		return entityService.createEntity(CreateEntityRequest.getName(), CreateEntityRequest.getDescription());
 	}
 	
 	@GetMapping(path = "/get/{entityId}")
-	public Entity getCalendar(@RequestBody String entityId) throws ClassNotFoundException, IOException
+	public Entity getCalendar(@PathVariable String entityId) throws ClassNotFoundException, IOException
 	{
 		return entityService.getEntity(entityId);
 	}
 	
-	@DeleteMapping(path = "/delete/{entityId}", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@DeleteMapping(path = "/delete/{entityId}")
 	public void deleteEntity(@PathVariable String entityId)
 	{
 		entityService.deleteEntity(entityId);
 	}
 	
-	@PutMapping(path = "/update/{entityId}", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public void updateEntity(@PathVariable String entityId, @RequestBody String name, String description, byte[] photo, List<String> calendarIds, String listed) throws ClassNotFoundException, IOException
+	@PutMapping(path = "/update/{entityId}")
+	public void updateEntity(@PathVariable String entityId, @RequestBody UpdateEntityRequest updateEntityRequest) throws ClassNotFoundException, IOException
 	{
-		entityService.updateEntity(entityId, name, description, photo, calendarIds, listed);
+		entityService.updateEntity(entityId, UpdateEntityRequest.getName(), UpdateEntityRequest.getDescription(), UpdateEntityRequest.getPhoto(), UpdateEntityRequest.getCalendarIds(), UpdateEntityRequest.getListed());
 	}
 	
-	@PutMapping(path = "/like/{entityId}", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public void like(@RequestBody String entityId) throws ClassNotFoundException, IOException
+	@PutMapping(path = "/like/{entityId}")
+	public void like(@PathVariable String entityId) throws ClassNotFoundException, IOException
 	{
 		entityService.like(entityId);
 	}
 	
 	@GetMapping(path = "/getLikes/{entityId}")
-	public Entity getLikes(@RequestBody String entityId) throws ClassNotFoundException, IOException
+	public Entity getLikes(@PathVariable String entityId) throws ClassNotFoundException, IOException
 	{
 		return entityService.getLikes(entityId);
 	}

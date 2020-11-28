@@ -37,14 +37,14 @@ public class CalendarController {
 		this.calendarService = calendarService;
 	}
 	
-	@PostMapping(consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@PostMapping()
 	public String createCalendar(@RequestBody CreateCalendarRequest createCalendarRequest)
 	{
 		return calendarService.createCalendar(CreateCalendarRequest.getEntityId(), CreateCalendarRequest.getName(), CreateCalendarRequest.getDescription());
 	}
 	
 	@GetMapping(path = "/get/{calendarId}")
-	public Calendar getCalendar(@RequestBody String calendarId) throws ClassNotFoundException, IOException
+	public Calendar getCalendar(@PathVariable String calendarId) throws ClassNotFoundException, IOException
 	{
 		return calendarService.getCalendar(calendarId);
 	}
@@ -61,14 +61,14 @@ public class CalendarController {
 		calendarService.deleteCalendar(entityId);
 	}
 
-	@PostMapping(consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public Set<Date> addSlotReservations(@PathVariable AddSlotReservationsRequest addSlotReservationsRequest)
+	@PostMapping(path = "/addSlot")
+	public Set<Date> addSlotReservations(@RequestBody AddSlotReservationsRequest addSlotReservationsRequest)
 	{
 		return calendarService.addSlotReservations(AddSlotReservationsRequest.getCalendarId(), AddSlotReservationsRequest.getSlots());
 	}
 	
-	@PostMapping(consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public String addReservation(@PathVariable AddReservationRequest addReservationRequest) throws ParseException
+	@PostMapping(path = "/addReservation")
+	public String addReservation(@RequestBody AddReservationRequest addReservationRequest) throws ParseException
 	{
 		return calendarService.addReservation(AddReservationRequest.getCalendarId(), AddReservationRequest.getDate(), AddReservationRequest.getName());
 	}

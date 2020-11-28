@@ -29,7 +29,7 @@ public class BlobDriver {
 	@Bean
 	public CloudBlobContainer getBlobContainer() throws InvalidKeyException, URISyntaxException, StorageException
 	{
-		CloudBlobContainer container = getCloudBlobClient().getContainerReference(environment.getProperty("mediacontainer"));		
+		CloudBlobContainer container = getCloudBlobClient().getContainerReference(environment.getProperty("blobstorecontainer.name"));		
 		return container;
 	}
 	

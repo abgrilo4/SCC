@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.entities.Forum;
 import com.example.demo.requests.AddMessageRequest;
 import com.example.demo.requests.AddReplyRequest;
+import com.example.demo.requests.EditForumRequest;
 
 import org.springframework.http.MediaType;
 
@@ -30,28 +31,28 @@ public class ForumController {
 		this.forumService = forumService;
 	}
 	
-	@PostMapping(consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@PostMapping()
 	public String createForum(@RequestBody String entityId, String name, String description)
 	{
 		return forumService.createForum(entityId, name, description);
 	}
 	
 	@PutMapping(path= "/edit/{entityId}")
-	public Forum editForum(@RequestBody String entityId, String name, String description) throws ClassNotFoundException, IOException
+	public Forum editForum(@PathVariable String entityId, @RequestBody EditForumRequest editForumRequest) throws ClassNotFoundException, IOException
 	{
-		return forumService.editForum(entityId, name, description);
+		return forumService.editForum(entityId, EditForumRequest.getName(), EditForumRequest.getDescription());
 	}
 	
 	@GetMapping(path = "/get/{entityId}")
-	public Forum getForum(@RequestBody String entityId) throws ClassNotFoundException, IOException
+	public Forum getForum(@PathVariable String entityId) throws ClassNotFoundException, IOException
 	{
 		return forumService.getForum(entityId);
 	}
 	
 	@PutMapping(path = "/{entityId}", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public void addMessage(@PathVariable String id, @RequestBody AddMessageRequest messageRequest)
+	public void addMessage(@PathVariable String entityId, @RequestBody AddMessageRequest messageRequest)
 	{
-		forumService.addMessage(messageRequest.getUserId(), messageRequest.getTextMessage(),id);
+		forumService.addMessage(messageRequest.getUserId(), messageRequest.getTextMessage(),entityId);
 	}
 	
 	@PutMapping(path = "/{entityId}", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
