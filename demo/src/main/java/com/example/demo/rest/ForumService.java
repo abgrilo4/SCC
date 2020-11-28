@@ -150,7 +150,7 @@ public class ForumService{
 		Forum forum = forums.findById(id).get();
 		Message message = messages.findById(messageId).get();
 		String replyId = UUID.randomUUID().toString();
-		Message.addReply(messageId);
+		message.addReply(messageId);
 		messages.save(message);
 		forum.addReply(replyId);
 		forums.save(forum);

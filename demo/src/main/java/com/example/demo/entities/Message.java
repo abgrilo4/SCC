@@ -13,11 +13,11 @@ import java.util.Set;
 public class Message implements Serializable{
 
 	@Id
-	private static String userId;
-	private static String message;
-	private static String forumId;
-	private static String messageId;
-	private static List<String> replies;
+	private  String messageId;
+	private  String userId;
+	private  String message;
+	private  String forumId;
+	private  List<String> replies;
 	
 	public Message(String userId, String message, String forumId, String messageId)
 	{
@@ -28,28 +28,28 @@ public class Message implements Serializable{
 		replies = new LinkedList<String>();
 	}
 	
-	public static void addReply(String messageId)
+	public void addReply(String messageId)
 	{
 		replies.add(messageId);
 	}
 	
-	public static String getUserId() {
+	public String getUserId() {
 		return userId;
 	}
-	public static void setUserId(String userId) {
-		Message.userId = userId;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
-	public static String getMessage() {
+	public String getMessage() {
 		return message;
 	}
-	public static void setMessage(String message) {
-		Message.message = message;
+	public void setMessage(String message) {
+		this.message = message;
 	}
-	public static String getForumId() {
+	public String getForumId() {
 		return forumId;
 	}
-	public static void setForumId(String forumId) {
-		Message.forumId = forumId;
+	public void setForumId(String forumId) {
+		this.forumId = forumId;
 	}	
 }
 
