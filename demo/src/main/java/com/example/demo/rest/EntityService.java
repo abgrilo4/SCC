@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Service;
 
 import com.example.demo.entities.Entity;
 import com.example.demo.repositories.EntityRepository;
@@ -15,6 +16,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+@Service
 public class EntityService {
 
 	private final EntityRepository entities;
@@ -31,16 +33,13 @@ public class EntityService {
 		likes = 0;
 	}
 
-	public String createEntity(String name, String description, byte[] photo, List<String> calendarIds, String listed)
+	public String createEntity(String name, String description)
 	{
 		String entityId = UUID.randomUUID().toString();
 		Entity entity = new Entity();
 		entity.setName(name);
 		entity.setId(entityId);
 		entity.setDescription(description);
-		entity.setPhoto(photo);
-		entity.setCalendarIds(calendarIds);
-		entity.setListed(listed);
 
 		entities.save(entity);
 		return entity.getId();

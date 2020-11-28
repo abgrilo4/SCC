@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entities.Entity;
+import com.example.demo.requests.CreateEntityRequest;
 
 import org.springframework.http.MediaType;
 
@@ -31,10 +32,10 @@ public class EntityController {
 		this.entityService = entityService;
 	}
 	
-	@PostMapping(consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public String createEntity(@RequestBody String name, String description, byte[] photo, List<String> calendarIds, String listed)
+	@PostMapping(path = "/create", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	public String createEntity(@RequestBody CreateEntityRequest createEntityRequest)
 	{
-		return entityService.createEntity(name, description, photo, calendarIds, listed);
+		return entityService.createEntity(CreateEntityRequest.getName(), CreateEntityRequest.getDescription());
 	}
 	
 	@GetMapping(path = "/get/{entityId}")

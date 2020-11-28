@@ -22,7 +22,7 @@ import org.springframework.http.MediaType;
 
 
 @RestController
-@RequestMapping("/entity")
+@RequestMapping("/calendar")
 public class CalendarController {
 	
 	CalendarService calendarService;

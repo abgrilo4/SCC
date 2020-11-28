@@ -2,10 +2,12 @@ package com.example.demo.rest;
 
 
 import java.io.IOException;
+
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Service;
 
 import com.example.demo.entities.Forum;
 import com.example.demo.entities.Message;
@@ -17,6 +19,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+@Service
 public class ForumService {
 
 	private final ForumRepository forums;

@@ -4,10 +4,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.example.demo.entities.Entity;
 import com.example.demo.repositories.EntityRepository;
 import com.example.demo.utils.LikesComparator;
 
+@Service
 public class HomeService {
 
 	private List<Entity> ranking;
