@@ -20,6 +20,7 @@ public class EntityService {
 	private final EntityRepository entities;
 	private Environment environment;
 	private boolean usesCache;
+	private int likes;
 
 	@Autowired
 	public EntityService(EntityRepository entities, Environment environment)
@@ -27,6 +28,7 @@ public class EntityService {
 		this.entities = entities;
 		this.environment = environment;
 		this.usesCache = this.environment.getProperty("azure.jedis.use").equals("true");
+		likes = 0;
 	}
 
 	public String createEntity(String name, String description, byte[] photo, List<String> calendarIds, String listed)
@@ -154,4 +156,100 @@ public class EntityService {
 		return entity;
 	}
 
-}
+	public Entity like(String entityId) throws IOException, ClassNotFoundException {
+		boolean miss = true;
+		Entity entity = null;
+
+		if(usesCache)
+		{
+			JedisPoolConfig config = new JedisPoolConfig();
+			ServiceUtils.getPool(config);
+			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
+			try(Jedis jedisClient = jedis.getResource()) {
+				String cachedResource = jedisClient.hget("entities", entityId);
+				if(cachedResource != null)
+				{
+					entity = ServiceUtils.deserializeEntity(cachedResource);
+					entity.like();
+					miss = false;
+				}
+				jedisClient.close();
+			}
+		}
+
+		if(miss || !usesCache)
+		{
+
+			try {
+				entity = entities.findById(entityId).get();
+				entity.like();
+				entities.save(entity);
+			}
+			catch(Exception e) {
+				return null;
+			}
+		}
+
+		if(usesCache)
+		{
+			JedisPoolConfig config = new JedisPoolConfig();
+			ServiceUtils.getPool(config);
+			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
+			try(Jedis jedisClient = jedis.getResource()) {
+				jedisClient.hset("entities", entityId, ServiceUtils.serializeEntity(entity));
+				entities.save(entity);
+				jedisClient.close();
+			}
+		}
+		return entity;
+	}
+
+	
+	public Entity getLikes(String entityId) throws IOException, ClassNotFoundException
+	{
+		boolean miss = true;
+		Entity entity = null;
+
+		if(usesCache)
+		{
+			JedisPoolConfig config = new JedisPoolConfig();
+			ServiceUtils.getPool(config);
+			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
+			try(Jedis jedisClient = jedis.getResource()) {
+				String cachedResource = jedisClient.hget("entities", entityId);
+				if(cachedResource != null)
+				{
+					entity = ServiceUtils.deserializeEntity(cachedResource);
+					miss = false;
+				}
+				jedisClient.close();
+			}
+		}
+
+		if(miss || !usesCache)
+		{
+
+			try {
+				entity = entities.findById(entityId).get();
+			}
+			catch(Exception e) {
+				return null;
+			}
+		}
+
+		if(usesCache)
+		{
+			JedisPoolConfig config = new JedisPoolConfig();
+			ServiceUtils.getPool(config);
+			JedisPool jedis = new JedisPool(config, this.environment.getProperty("azure.redis.Hostname"), 6379, 1000, this.environment.getProperty("azure.jedis.cacheKey"), 1);
+			try(Jedis jedisClient = jedis.getResource()) {
+				jedisClient.hset("entities", entityId, ServiceUtils.serializeEntity(entity));
+				entities.save(entity);
+				jedisClient.close();
+			}
+		}
+		return entity;
+	}
+
+	}
+

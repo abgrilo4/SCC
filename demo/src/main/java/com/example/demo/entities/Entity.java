@@ -70,4 +70,14 @@ public class Entity {
 	public void setListed(String listed) {
 		this.listed = listed;
 	}
+	
+	public int getLikes()
+	{
+		return numberOfLikes;
+	}
+	
+	public void like()
+	{
+		numberOfLikes++;
+	}
 }

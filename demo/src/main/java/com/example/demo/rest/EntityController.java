@@ -56,5 +56,18 @@ public class EntityController {
 	{
 		entityService.updateEntity(entityId, name, description, photo, calendarIds, listed);
 	}
+	
+	@PutMapping(path = "/like/{entityId}", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	public void like(@RequestBody String entityId) throws ClassNotFoundException, IOException
+	{
+		entityService.like(entityId);
+	}
+	
+	@GetMapping(path = "/getLikes/{entityId}")
+	public Entity getLikes(@RequestBody String entityId) throws ClassNotFoundException, IOException
+	{
+		return entityService.getLikes(entityId);
+	}
+	
 
 }
