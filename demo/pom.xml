@@ -96,7 +96,7 @@
           <resourceGroup>spring-boot-azure-1601430944378-rg</resourceGroup>  
           <appName>sccproj4733849930</appName>  
           <pricingTier>F1</pricingTier>  
-          <region>westeurope</region>  
+          <region>ukwest</region>  
           <runtime> 
             <os>linux</os>  
             <javaVersion>java11</javaVersion>  
