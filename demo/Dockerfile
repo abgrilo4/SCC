@@ -1,4 +1,4 @@
-FROM tomcat:9.0-jdk11-openjdk
-WORKDIR /usr/local/tomcat
-ADD scc2021-backend-solved-0.1.war webapps
-EXPOSE 8080
+FROM openjdk:8-jdk-alpine
+ARG JAR_FILE=target/spring-boot-azure-0.0.1-SNAPSHOT.jar.original
+ADD ${JAR_FILE} app.jar
+ENTRYPOINT ["java", "-jar", "/app.jar"]
